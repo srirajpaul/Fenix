@@ -261,6 +261,17 @@ int MPI_Isend(MPI_CONST_TYPE void* buf, int count, MPI_Datatype datatype,
     return ret;
 }
 
+int MPI_Issend(MPI_CONST_TYPE void* buf, int count, MPI_Datatype datatype,
+              int dest, int tag, MPI_Comm comm, MPI_Request *request)
+{
+    int ret;
+    ret = PMPI_Issend(buf, count, datatype, dest, tag,
+                     __fenix_replace_comm(comm), request);
+    __fenix_override_request(ret, request);
+    __fenix_test_MPI_inline(ret, "MPI_Issend");
+    return ret;
+}
+
 int MPI_Irecv(void *buf, int count, MPI_Datatype datatype,
               int source, int tag, MPI_Comm comm, MPI_Request *request)
 {
