@@ -221,6 +221,15 @@ int MPI_Send(MPI_CONST_TYPE void* buf, int count, MPI_Datatype type, int dest,
     return ret;
 }
 
+int MPI_Ssend(MPI_CONST_TYPE void* buf, int count, MPI_Datatype type, int dest,
+             int tag, MPI_Comm comm)
+{
+    int ret;
+    ret = PMPI_Ssend(buf, count, type, dest, tag, __fenix_replace_comm(comm));
+    __fenix_test_MPI_inline(ret, "MPI_Ssend");
+    return ret;
+}
+
 int MPI_Sendrecv(MPI_CONST_TYPE void* sendbuf, int sendcount, 
                  MPI_Datatype sendtype, int dest, int sendtag,
                  void *recvbuf, int recvcount, MPI_Datatype recvtype,
