@@ -186,3 +186,18 @@ int Fenix_Process_fail_list(int** fail_list){
   *fail_list = fenix.fail_world;
   return fenix.fail_world_size;
 }
+
+int Fenix_check_cancelled(MPI_Request *request, MPI_Status *status){
+   
+    //We know this may return as "COMM_REVOKED", but we know the error was already handled
+    int old_ignore_setting = fenix.ignore_errs;
+    fenix.ignore_errs = 1;
+
+    int flag;
+    int ret = PMPI_Test(request, &flag, status);
+    
+    fenix.ignore_errs = old_ignore_setting;
+    
+    //Request was (potentially) cancelled if ret is MPI_ERR_PROC_FAILED
+    return ret == MPI_ERR_PROC_FAILED || ret == MPI_ERR_REVOKED;
+}
