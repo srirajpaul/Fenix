@@ -615,6 +615,10 @@ int __fenix_spare_rank()
     return result;
 }
 
+void __fenix_set_init_flag_hack() {
+    fenix.fenix_init_flag = 1;
+}
+
 void __fenix_postinit(int *error)
 {
 
@@ -638,7 +642,7 @@ void __fenix_postinit(int *error)
     }
 #endif
 
-    if (fenix.role == FENIX_ROLE_SURVIVOR_RANK) {
+    if (fenix.role == FENIX_ROLE_SURVIVOR_RANK || fenix.role == FENIX_ROLE_RECOVERED_RANK) {
         __fenix_callback_invoke_all(*error);
     }
     if (fenix.options.verbose == 9) {

@@ -114,6 +114,8 @@ int __fenix_get_rank_role();
 
 void __fenix_set_rank_role(int FenixRankRole);
 
+void __fenix_set_init_flag_hack();
+
 void __fenix_postinit(int *);
 
 void __fenix_finalize();

@@ -133,6 +133,21 @@ extern const Fenix_Data_subset  FENIX_DATA_SUBSET_EMPTY;
         __fenix_postinit( _error );                                     \
     }
 
+#define Fenix_Init_cb(_role, _comm, _newcomm, _argc, _argv, _spare_ranks,  \
+                   _spawn, _info, _error, _recover, _callback_data)     \
+    {                                                                   \
+        static jmp_buf bufjmp;                                          \
+        *(_role) = __fenix_preinit(_role, _comm, _newcomm, _argc,       \
+                                   _argv, _spare_ranks, _spawn, _info,  \
+                                   _error, &bufjmp);                    \
+        if(setjmp(bufjmp)) {                                            \
+            *(_role) = FENIX_ROLE_SURVIVOR_RANK;                        \
+        }                                                               \
+        __fenix_set_init_flag_hack();                                   \
+        Fenix_Callback_register(_recover, _callback_data);              \
+        __fenix_postinit( _error );                                     \
+    }
+
 int Fenix_Initialized(int *);
 
 int Fenix_Callback_register(void (*recover)(MPI_Comm, int, void *),
